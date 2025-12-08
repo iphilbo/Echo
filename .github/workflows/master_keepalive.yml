@@ -47,11 +47,15 @@ jobs:
           zip -r keepalive.zip keepalive/
           ls -lh keepalive.zip
 
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Deploy to Azure Function App
         uses: Azure/functions-action@v1
         with:
           app-name: 'KeepAlive'
-          publish-profile: ${{ secrets.AZUREAPPSVC_PUBLISHPROFILE_KEEPALIVE }}
           package: './publish/keepalive.zip'
           scm-do-build-during-deployment: false
           enable-oryx-build: false
@@ -67,4 +71,3 @@ jobs:
           echo "1. Verify connection strings in Azure Portal" >> $GITHUB_STEP_SUMMARY
           echo "2. Check Function App logs for execution" >> $GITHUB_STEP_SUMMARY
           echo "3. Verify database inserts in SysLog tables" >> $GITHUB_STEP_SUMMARY
-
