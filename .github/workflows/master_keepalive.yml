@@ -1,20 +1,27 @@
-name: Deploy KeepAlive Function App
+name: Deploy Echo KeepAlive Function App
 
 on:
   push:
     branches:
-      - master
       - main
+      - master
     paths:
       - '**/*.cs'
       - '**/*.csproj'
       - '**/*.json'
-      - '.github/workflows/master_keepalive.yml'
+      - '.github/workflows/*.yml'
   workflow_dispatch:
+    inputs:
+      skip_build:
+        description: 'Skip build validation'
+        required: false
+        default: 'false'
+        type: boolean
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: production
 
     steps:
       - name: Checkout repository
@@ -29,7 +36,7 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build --configuration Release --no-restore --warnaserror
 
       - name: Publish
         run: dotnet publish --configuration Release --output ./publish/keepalive --no-build
@@ -38,6 +45,7 @@ jobs:
         run: |
           cd publish
           zip -r keepalive.zip keepalive/
+          ls -lh keepalive.zip
 
       - name: Deploy to Azure Function App
         uses: Azure/functions-action@v1
@@ -45,4 +53,18 @@ jobs:
           app-name: 'KeepAlive'
           publish-profile: ${{ secrets.AZUREAPPSVC_PUBLISHPROFILE_KEEPALIVE }}
           package: './publish/keepalive.zip'
+          scm-do-build-during-deployment: false
+          enable-oryx-build: false
+
+      - name: Deployment Summary
+        run: |
+          echo "## Deployment Complete ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- Function App: KeepAlive" >> $GITHUB_STEP_SUMMARY
+          echo "- Package: keepalive.zip" >> $GITHUB_STEP_SUMMARY
+          echo "- Time: $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Next Steps:**" >> $GITHUB_STEP_SUMMARY
+          echo "1. Verify connection strings in Azure Portal" >> $GITHUB_STEP_SUMMARY
+          echo "2. Check Function App logs for execution" >> $GITHUB_STEP_SUMMARY
+          echo "3. Verify database inserts in SysLog tables" >> $GITHUB_STEP_SUMMARY
 
