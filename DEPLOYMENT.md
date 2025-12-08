@@ -65,35 +65,42 @@ Use the `deploy-keepalive.ps1` script for manual deployments.
 
 ### Method 2: GitHub Actions (Automated CI/CD)
 
-The project includes a GitHub Actions workflow that automatically deploys on push to `master` or `main`.
+The project includes a GitHub Actions workflow that automatically deploys on push to `master` or `main` using Azure CLI.
 
 #### Setup
 
-1. **Configure GitHub Secret:**
-   - Go to your GitHub repository
-   - Settings → Secrets and variables → Actions
-   - Click "New repository secret"
-   - Name: `AZUREAPPSVC_PUBLISHPROFILE_KEEPALIVE`
-   - Value: Download the publish profile from Azure Portal:
-     - Function App → Overview → Get publish profile
-     - Copy the entire XML content
+1. **Create Azure Service Principal:**
+   ```powershell
+   az ad sp create-for-rbac --name "github-actions-echo" --role contributor --scopes /subscriptions/{SUBSCRIPTION-ID}/resourceGroups/{RESOURCE-GROUP} --sdk-auth
+   ```
+   This outputs JSON that you'll use in the next step.
 
-2. **Push to trigger deployment:**
+2. **Add GitHub Secrets:**
+   - Go to your GitHub repository: https://github.com/iphilbo/Echo
+   - Navigate to: **Settings** → **Secrets and variables** → **Actions**
+   - Add these 3 secrets:
+     - `AZURE_CREDENTIALS`: Paste the entire JSON from step 1
+     - `AZURE_RESOURCE_GROUP`: Your resource group name (e.g., `pro-prod-rg`)
+     - `AZURE_FUNCTION_APP_NAME`: Your Function App name (e.g., `KeepAlive`)
+
+3. **Push to trigger deployment:**
    ```bash
-   git push origin master
+   git push origin main
    ```
 
 The workflow will:
 - Build the project
 - Create a ZIP package
-- Deploy to Azure Function App
+- Deploy to Azure Function App using Azure CLI
 
 #### Manual Workflow Trigger
 
 You can also trigger the workflow manually:
 - Go to GitHub repository → Actions tab
-- Select "Deploy KeepAlive Function App"
-- Click "Run workflow"
+- Select "Deploy Echo KeepAlive Function App"
+- Click "Run workflow" → "Run workflow"
+
+**For detailed setup instructions, see `SETUP_GITHUB_ACTIONS.md`**
 
 ### Method 3: Azure Portal (Manual Upload)
 

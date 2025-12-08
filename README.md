@@ -268,10 +268,14 @@ The project includes a GitHub Actions workflow (`.github/workflows/master_keepal
 1. Triggers on push to `master` or `main` branch
 2. Builds and publishes the project
 3. Creates a ZIP package
-4. Deploys to Azure Function App
+4. Deploys to Azure Function App using Azure CLI
 
-**Required GitHub Secret:**
-- `AZUREAPPSVC_PUBLISHPROFILE_KEEPALIVE`: Azure publish profile for the Function App
+**Required GitHub Secrets:**
+- `AZURE_CREDENTIALS`: Service principal JSON (created via `az ad sp create-for-rbac`)
+- `AZURE_RESOURCE_GROUP`: Resource group name (e.g., `pro-prod-rg`)
+- `AZURE_FUNCTION_APP_NAME`: Function App name (e.g., `KeepAlive`)
+
+See `SETUP_GITHUB_ACTIONS.md` for detailed setup instructions.
 
 ### Azure Function App Configuration
 
