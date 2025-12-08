@@ -1,6 +1,8 @@
-# KeepAlive Azure Function
+# Echo KeepAlive Azure Function
 
 An Azure Functions application that prevents Azure SQL Database from auto-shutting down during business hours by performing periodic write operations.
+
+**Repository:** https://github.com/iphilbo/Echo
 
 ## Overview
 
