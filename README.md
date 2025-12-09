@@ -59,13 +59,16 @@ For each configured database:
 
 #### Application Heartbeat
 
-1. Retrieves the heartbeat URL from environment variables (default: `https://iris.intralogichealth.com/api/heartbeat`)
-2. Makes an HTTP GET request to the heartbeat endpoint
-3. Logs the operation result
+For each configured heartbeat endpoint:
 
-**Note**: The heartbeat call serves to:
-- **Prevent app layer cold starts**: Keeps the application warm during business hours
+1. Retrieves the heartbeat URLs from environment variables (default: both IRIS and Dev endpoints)
+2. Makes an HTTP GET request to each heartbeat endpoint
+3. Logs the operation result for each endpoint
+
+**Note**: The heartbeat calls serve to:
+- **Prevent app layer cold starts**: Keeps the applications warm during business hours
 - **Minimal overhead**: Simple HTTP GET request with no payload
+- **Multiple endpoints**: Supports comma-separated list of URLs to keep multiple apps warm
 
 All operations (databases and heartbeat) are executed in parallel for efficiency.
 
@@ -89,7 +92,7 @@ The function uses the following environment variables (all have defaults):
 | `KEEPALIVE_DATABASES` | `"Default"` | Comma-separated list of database names to keep alive (e.g., "Default,Secondary,Third") |
 | `ConnectionStrings:Default` or `SQLConn` | *(required for "Default")* | Primary SQL Server connection string |
 | `ConnectionStrings:{DatabaseName}` | *(required per database)* | Connection string for each database listed in `KEEPALIVE_DATABASES` |
-| `HEARTBEAT_URL` | `"https://iris.intralogichealth.com/api/heartbeat"` | Application heartbeat endpoint URL to keep app layer warm |
+| `HEARTBEAT_URL` | `"https://iris.intralogichealth.com/api/heartbeat,https://dev.intralogichealth.com/api/heartbeat"` | Comma-separated list of application heartbeat endpoint URLs to keep app layer warm |
 | `TIME_ZONE` | `"Eastern Standard Time"` | Time zone identifier for work window calculations |
 | `WORK_DAYS` | `"Mon-Fri"` | Comma-separated or hyphenated day range (e.g., "Mon-Fri", "Mon,Wed,Fri", "Sat,Sun") |
 | `WORK_START` | `"07:00"` | Start time of work window (24-hour format, HH:mm) |
@@ -121,6 +124,26 @@ The function can keep multiple databases warm simultaneously. To configure multi
 ```
 
 **Note**: All databases are processed in parallel for efficiency. If one database fails, the others will still be processed.
+
+### Multiple Heartbeat Endpoint Support
+
+The function can keep multiple application heartbeat endpoints warm simultaneously. By default, it calls both IRIS and Dev endpoints:
+
+- **Default configuration**: `https://iris.intralogichealth.com/api/heartbeat,https://dev.intralogichealth.com/api/heartbeat`
+
+To customize the heartbeat endpoints:
+
+1. **Set the heartbeat URL list**: Configure `HEARTBEAT_URL` with comma-separated URLs:
+   ```
+   HEARTBEAT_URL=https://app1.com/api/heartbeat,https://app2.com/api/heartbeat,https://app3.com/api/heartbeat
+   ```
+
+2. **Single endpoint**: To use only one endpoint, provide a single URL:
+   ```
+   HEARTBEAT_URL=https://iris.intralogichealth.com/api/heartbeat
+   ```
+
+**Note**: All heartbeat endpoints are processed in parallel for efficiency. If one endpoint fails, the others will still be processed.
 
 ### Connection String Lookup
 

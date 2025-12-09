@@ -57,10 +57,22 @@ namespace Prometheus.KeepAlive
 
                 _logger.LogInformation("Processing keep-alive for {Count} database(s): {Databases}", databaseNames.Length, string.Join(", ", databaseNames));
 
-                // Process all databases and heartbeat endpoint (in parallel for efficiency)
+                // Get list of heartbeat URLs to keep alive
+                // Format: comma-separated list (e.g., "https://app1.com/api/heartbeat,https://app2.com/api/heartbeat")
+                // Default includes both IRIS and Dev endpoints
+                var heartbeatUrlsConfig = Environment.GetEnvironmentVariable("HEARTBEAT_URL") 
+                    ?? "https://iris.intralogichealth.com/api/heartbeat,https://dev.intralogichealth.com/api/heartbeat";
+                var heartbeatUrls = heartbeatUrlsConfig.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+                if (heartbeatUrls.Length > 0)
+                {
+                    _logger.LogInformation("Processing keep-alive for {Count} heartbeat endpoint(s): {Urls}", heartbeatUrls.Length, string.Join(", ", heartbeatUrls));
+                }
+
+                // Process all databases and heartbeat endpoints (in parallel for efficiency)
                 var tasks = new List<Task>();
                 tasks.AddRange(databaseNames.Select(dbName => KeepDatabaseAliveAsync(dbName.Trim())));
-                tasks.Add(KeepHeartbeatAliveAsync());
+                tasks.AddRange(heartbeatUrls.Select(url => KeepHeartbeatAliveAsync(url.Trim())));
                 await Task.WhenAll(tasks);
             }
             catch (Exception ex)
@@ -130,31 +142,28 @@ namespace Prometheus.KeepAlive
         }
 
         /// <summary>
-        /// Performs keep-alive operation on the application heartbeat endpoint.
+        /// Performs keep-alive operation on a single application heartbeat endpoint.
         /// Keeps the app layer warm during business hours to prevent cold starts.
         /// </summary>
-        private async Task KeepHeartbeatAliveAsync()
+        /// <param name="heartbeatUrl">The heartbeat endpoint URL to call</param>
+        private async Task KeepHeartbeatAliveAsync(string heartbeatUrl)
         {
             try
             {
-                // Get heartbeat URL from environment variable, with default
-                var heartbeatUrl = Environment.GetEnvironmentVariable("HEARTBEAT_URL") 
-                    ?? "https://iris.intralogichealth.com/api/heartbeat";
-
                 if (string.IsNullOrWhiteSpace(heartbeatUrl))
                 {
-                    _logger.LogWarning("No heartbeat URL configured. Set HEARTBEAT_URL environment variable to enable app layer keep-alive.");
+                    _logger.LogWarning("Empty heartbeat URL provided, skipping.");
                     return;
                 }
 
                 // Make HTTP GET request to heartbeat endpoint
                 var response = await _httpClient.GetAsync(heartbeatUrl);
                 response.EnsureSuccessStatusCode();
-                _logger.LogInformation("Heartbeat endpoint keep-alive successful. StatusCode={StatusCode} at {Time}", response.StatusCode, DateTime.UtcNow);
+                _logger.LogInformation("Heartbeat endpoint '{Url}' keep-alive successful. StatusCode={StatusCode} at {Time}", heartbeatUrl, response.StatusCode, DateTime.UtcNow);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Heartbeat endpoint keep-alive failed");
+                _logger.LogError(ex, "Heartbeat endpoint keep-alive failed for '{Url}'", heartbeatUrl);
                 // Don't throw - continue processing other keep-alive operations even if heartbeat fails
             }
         }
