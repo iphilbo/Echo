@@ -1,0 +1,45 @@
+<step title="BackgroundTrace" date="2025-08-14T13:26:33.109" instance="24b1f2" url="synctriggers-operation" method="POST" >
+  <step title="Updating shutdown sentinel last write time" date="2025-08-14T13:26:33.140" SemaphoreCount="5" /><!-- duration: 31ms -->
+  <step title="Delaying &apos;00:01:00&apos; for Functions site to restart." date="2025-08-14T13:26:33.187" /><!-- duration: 31ms -->
+  <step title="End HttpPost, status: BadGateway" date="2025-08-14T13:27:07.916" /><!-- duration: 31ms -->
+  <step title="Begin HttpPost https://keepalive-erdcbvg3d4e9apff.westus2-01.azurewebsites.net/admin/host/synctriggers, x-ms-request-id: 0879716f-7912-11f0-9fa1-94b86d6f3abe" date="2025-08-14T13:27:08.973" /><!-- duration: 78ms -->
+  <step title="Begin HttpPost https://keepalive-erdcbvg3d4e9apff.westus2-01.azurewebsites.net/admin/host/synctriggers, x-ms-request-id: 3e7ee2e9-7912-11f0-bf4a-94b86d6f3abe" date="2025-08-14T13:27:33.241" /><!-- duration: 31ms -->
+  <step title="End HttpPost, status: 0" date="2025-08-14T13:28:49.100" /><!-- duration: 31ms -->
+  <step title="Begin HttpPost https://keepalive-erdcbvg3d4e9apff.westus2-01.azurewebsites.net/admin/host/synctriggers, x-ms-request-id: 0879716f-7912-11f0-9fa1-94b86d6f3abe" date="2025-08-14T13:28:50.154" /><!-- duration: 31ms -->
+  <step title="End HttpPost, status: 0" date="2025-08-14T13:29:13.306" /><!-- duration: 31ms -->
+  <step title="End HttpPost, status: OK" date="2025-08-14T13:29:14.272" /><!-- duration: 16ms -->
+  <step title="Syncing function triggers by calling the functions runtime site successful." date="2025-08-14T13:29:14.319" /><!-- duration: 47ms -->
+>
+  <step title="Begin HttpPost https://keepalive-erdcbvg3d4e9apff.westus2-01.azurewebsites.net/admin/host/synctriggers, x-ms-request-id: 3e7ee2e9-7912-11f0-bf4a-94b86d6f3abe" date="2025-08-14T13:29:14.366" /><!-- duration: 31ms -->
+  <step title="End HttpPost, status: ServiceUnavailable" date="2025-08-14T13:29:14.756" /><!-- duration: 31ms -->
+  <step title="Begin HttpPost https://keepalive-erdcbvg3d4e9apff.westus2-01.azurewebsites.net/admin/host/synctriggers, x-ms-request-id: 3e7ee2e9-7912-11f0-bf4a-94b86d6f3abe" date="2025-08-14T13:29:15.829" /><!-- duration: 16ms -->
+  <step title="End HttpPost, status: 0" date="2025-08-14T13:30:55.901" /><!-- duration: 16ms -->
+  <step title="Syncing function triggers by calling the functions runtime site failed. System.Threading.Tasks.TaskCanceledException: A task was canceled.
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Kudu.Core.Helpers.PostDeploymentHelper.&lt;PostAsync&gt;d__49.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Kudu.Core.Helpers.PostDeploymentHelper.&lt;&gt;c__DisplayClass38_0.&lt;&lt;TryFunctionsRuntimeSyncTriggers&gt;b__1&gt;d.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Kudu.Core.Infrastructure.OperationManager.&lt;&gt;c__DisplayClass4_0.&lt;&lt;AttemptAsync&gt;b__0&gt;d.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at Kudu.Core.Infrastructure.OperationManager.&lt;AttemptAsync&gt;d__5`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Kudu.Core.Helpers.PostDeploymentHelper.&lt;TryFunctionsRuntimeSyncTriggers&gt;d__38.MoveNext()" date="2025-08-14T13:30:55.948" /><!-- duration: 31ms -->
+  <step title="Attempting to perform settriggers call directly." date="2025-08-14T13:30:56.042" /><!-- duration: 31ms -->
+  <step title="Begin HttpPost https://keepalive-erdcbvg3d4e9apff.scm.westus2-01.azurewebsites.net/operations/settriggers, x-ms-request-id: 3e7ee2e9-7912-11f0-bf4a-94b86d6f3abe" date="2025-08-14T13:30:56.120" /><!-- duration: 31ms -->
+  <step title="End HttpPost, status: OK" date="2025-08-14T13:30:56.292" /><!-- duration: 31ms -->
+  <step title="Syncing 0 function triggers with payload size 15 bytes successful." date="2025-08-14T13:30:56.339" /><!-- duration: 31ms -->
+  <step title="Deleting shutdown sentinel file" date="2025-08-14T13:30:56.385" SemaphoreCount="8" /><!-- duration: 63ms -->
+</step><!-- duration: 263354ms -->

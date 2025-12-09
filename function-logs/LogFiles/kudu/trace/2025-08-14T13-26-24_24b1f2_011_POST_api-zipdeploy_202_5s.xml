@@ -1,0 +1,17 @@
+<step title="Incoming Request" date="2025-08-14T13:26:24.558" instance="24b1f2" url="/api/zipdeploy?isAsync=true&amp;Deployer=az_cli_functions" method="POST" type="request" pid="7400,2,18" Cache-Control="no-cache" Content-Length="8453943" Content-Type="application/octet-stream" Accept="*/*" Accept-Encoding="gzip, deflate" Authorization="Bea..." Host="keepalive-erdcbvg3d4e9apff.scm.westus2-01.azurewebsites.net" User-Agent="AZURECLI/2.74.0 (MSI)" x-ms-client-request-id="3e7ee2e9-7912-11f0-bf4a-94b86d6f3abe" X-ARR-LOG-ID="3e7ee2e9-7912-11f0-bf4a-94b86d6f3abe" CLIENT-IP="66.67.123.91:57008" X-SITE-DEPLOYMENT-ID="KeepAlive" WAS-DEFAULT-HOSTNAME="keepalive-erdcbvg3d4e9apff.scm.westus2-01.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/zipdeploy?isAsync=true&amp;Deployer=az_cli_functions" >
+  <step title="Cleanup Xml Logs" date="2025-08-14T13:26:24.574" /><!-- duration: 47ms -->
+  <step title="ZipPushDeploy" date="2025-08-14T13:26:24.668" >
+    <step title="Functions App ZipDeploy. Run from package." date="2025-08-14T13:26:24.699" /><!-- duration: 16ms -->
+    <step title="Starting PushDeployAsync" date="2025-08-14T13:26:24.746" /><!-- duration: 16ms -->
+    <step title="Updating shutdown sentinel last write time" date="2025-08-14T13:26:24.824" SemaphoreCount="6" /><!-- duration: 31ms -->
+    <step title="LockFile &apos;C:\home\site\locks\deployments.lock&apos; acquired" date="2025-08-14T13:26:24.886" /><!-- duration: 31ms -->
+    <step title="Deleting outdated zip file C:\home\data\SitePackages\20250814131712.zip" date="2025-08-14T13:26:24.980" /><!-- duration: 47ms -->
+    <step title="Saving request content to C:\home\data\SitePackages\20250814132624.zip" date="2025-08-14T13:26:25.079" >
+      <step title="Total 8,453,943 bytes written to C:\home\data\SitePackages\20250814132624.zip" date="2025-08-14T13:26:28.890" /><!-- duration: 16ms -->
+    </step><!-- duration: 3936ms -->
+    <step title="LockFile &apos;C:\home\site\locks\deployments.lock&apos; released" date="2025-08-14T13:26:29.047" /><!-- duration: 47ms -->
+    <step title="Starting FetchDeploy" date="2025-08-14T13:26:29.125" /><!-- duration: 31ms -->
+    <step title="Start deployment in the background" date="2025-08-14T13:26:29.187" /><!-- duration: 328ms -->
+  </step><!-- duration: 4863ms -->
+  <step title="Outgoing response" date="2025-08-14T13:26:29.562" type="response" statusCode="202" statusText="Accepted" Server="Microsoft-IIS/10.0" x-ms-request-id="3e7ee2e9-7912-11f0-bf4a-94b86d6f3abe" Retry-After="30" Cache-Control="private" X-AspNet-Version="4.0.30319" Location="https://keepalive-erdcbvg3d4e9apff.scm.westus2-01.azurewebsites.net/api/deployments/latest?deployer=az_cli_functions&amp;time=2025-08-14_13-26-29Z" /><!-- duration: 16ms -->
+</step><!-- duration: 5051ms -->

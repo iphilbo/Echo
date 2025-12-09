@@ -5,3 +5,4 @@ CREATE TABLE SysLog (
     LogUser NVARCHAR(255),
     LogData NVARCHAR(MAX)
 );
+

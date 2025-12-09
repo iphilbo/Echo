@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>116e34fa8420406f9f829cd5582fd980</id>
+  <author>N/A</author>
+  <deployer>GITHUB_ZIP_DEPLOY_FUNCTIONS_V1</deployer>
+  <authorEmail>N/A</authorEmail>
+  <message>{"type":"deployment","sha":"be458fb267558688d2370d353c40879607742c6e","repoName":"iphilbo/Echo","actor":"iphilbo","slotName":"production"}</message>
+  <progress></progress>
+  <status>Success</status>
+  <statusText></statusText>
+  <lastSuccessEndTime>2025-12-08T14:00:35.7909504Z</lastSuccessEndTime>
+  <receivedTime>2025-12-08T14:00:33.2128318Z</receivedTime>
+  <startTime>2025-12-08T14:00:33.9159763Z</startTime>
+  <endTime>2025-12-08T14:00:35.7909504Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>True</is_readonly>
+  <project_type>Run-From-Zip</project_type>
+  <vsproject_id></vsproject_id>
+</deployment>

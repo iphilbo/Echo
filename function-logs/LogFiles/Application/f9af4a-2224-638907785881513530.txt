@@ -1,0 +1,11 @@
+2025-08-14T14:29:47  PID[2224] Information 8/14/2025 2:29:47 PM [[4.8]] [172-24-10-69] DaasRunner.exe with version 4.8.40625.1 and ProcessId=2224 started
+2025-08-14T14:29:47  PID[2224] Information 8/14/2025 2:29:47 PM [[4.8]] [172-24-10-69] Checking DaaS bits and updating if required
+2025-08-14T14:29:47  PID[2224] Information 8/14/2025 2:29:47 PM [[4.8]] [172-24-10-69] [daasrunner.exe] Version in DaaS Installation path (4.8.40625.1) is lower or equal to the existing version 4.8.40625.1. Version Compare result = 0
+2025-08-14T14:29:47  PID[2224] Information 8/14/2025 2:29:47 PM [[4.8]] [172-24-10-69] Binary Comparing files C:\Program Files (x86)\SiteExtensions\DaaS\4.8.40625.1\bin\daasrunner.exe and C:\home\site\Jobs\Continuous\DaaS\DaasRunner.exe
+2025-08-14T14:29:47  PID[2224] Information 8/14/2025 2:29:47 PM [[4.8]] [172-24-10-69] Binary Comparison succeeded: C:\Program Files (x86)\SiteExtensions\DaaS\4.8.40625.1\bin\daasrunner.exe and C:\home\site\Jobs\Continuous\DaaS\DaasRunner.exe
+2025-08-14T14:29:47  PID[2224] Information 8/14/2025 2:29:47 PM [[4.8]] [172-24-10-69] [daasconsole.exe] Version in DaaS Installation path (4.8.40625.1) is lower or equal to the existing version 4.8.40625.1. Version Compare result = 0
+2025-08-14T14:29:47  PID[2224] Information 8/14/2025 2:29:47 PM [[4.8]] [172-24-10-69] Binary Comparing files C:\Program Files (x86)\SiteExtensions\DaaS\4.8.40625.1\bin\daasconsole.exe and C:\home\data\DaaS\bin\DaasConsole.exe
+2025-08-14T14:29:47  PID[2224] Information 8/14/2025 2:29:47 PM [[4.8]] [172-24-10-69] Binary Comparison succeeded: C:\Program Files (x86)\SiteExtensions\DaaS\4.8.40625.1\bin\daasconsole.exe and C:\home\data\DaaS\bin\DaasConsole.exe
+2025-08-14T14:29:47  PID[2224] Information 8/14/2025 2:29:47 PM [[4.8]] [172-24-10-69] Done checking DaaS bits for any new updates
+2025-08-14T14:31:07  PID[2224] Information 8/14/2025 2:31:07 PM [[4.8]] [172-24-10-69] Storage account is not configured
+2025-08-14T14:31:07  PID[2224] Information 8/14/2025 2:31:07 PM [[4.8]] [172-24-10-69] Starting cleanup for Completed Sessions MaxDiagnosticSessionsToKeep = [10] MaxNumberOfDaysForSessions= [20]

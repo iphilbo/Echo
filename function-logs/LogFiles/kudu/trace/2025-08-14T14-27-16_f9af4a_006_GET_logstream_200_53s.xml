@@ -1,0 +1,9 @@
+<step title="Incoming Request" date="2025-08-14T14:27:16.789" instance="f9af4a" url="/logstream" method="GET" type="request" pid="3508,2,14" Accept-Encoding="identity" Authorization="Bea..." Host="keepalive-erdcbvg3d4e9apff.scm.westus2-01.azurewebsites.net" User-Agent="AZURECLI/2.74.0 (MSI)" x-ms-client-request-id="bff921ec-791a-11f0-a022-94b86d6f3abe" X-ARR-LOG-ID="bff921ec-791a-11f0-a022-94b86d6f3abe" CLIENT-IP="66.67.123.91:53886" X-SITE-DEPLOYMENT-ID="KeepAlive" WAS-DEFAULT-HOSTNAME="keepalive-erdcbvg3d4e9apff.scm.westus2-01.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/logstream" >
+  <step title="Cleanup Xml Logs" date="2025-08-14T14:27:16.821" /><!-- duration: 31ms -->
+  <step title="LogStreamHandler.BeginProcessRequest" date="2025-08-14T14:27:16.868" >
+    <step title="LockFile &apos;C:\home\site\locks\hooks.lock&apos; acquired" date="2025-08-14T14:27:17.039" /><!-- duration: 31ms -->
+    <step title="LockFile &apos;C:\home\site\locks\hooks.lock&apos; released" date="2025-08-14T14:27:17.180" /><!-- duration: 31ms -->
+  </step><!-- duration: 375ms -->
+  <step title="LogStreamHandler.EndProcessRequest" date="2025-08-14T14:28:09.904" /><!-- duration: 31ms -->
+  <step title="Outgoing response" date="2025-08-14T14:28:09.951" type="response" statusCode="200" statusText="OK" Server="Microsoft-IIS/10.0" Cache-Control="private" X-AspNet-Version="4.0.30319" Content-Type="text/plain; charset=utf-8" /><!-- duration: 31ms -->
+</step><!-- duration: 53224ms -->

@@ -6,16 +6,16 @@ An Azure Functions application that prevents Azure SQL Database from auto-shutti
 
 ## Overview
 
-This Azure Function App runs a timer-triggered function that periodically connects to an Azure SQL Database and performs a simple write operation. The primary purpose is to **keep the database warm during business hours** to prevent auto-shutdown, which saves costs by allowing the database to shut down outside business hours.
+This Azure Function App runs a timer-triggered function that periodically connects to Azure SQL Databases and calls application heartbeat endpoints to keep them warm during business hours. The primary purpose is to **prevent auto-shutdown during business hours**, which saves costs by allowing resources to shut down outside business hours.
 
 ### Why This Exists
 
 Azure SQL Database (especially serverless tiers) can be configured to auto-pause or shut down after periods of inactivity to reduce costs. However, when the database is shut down, the first connection after inactivity experiences a "cold start" delay (typically 5-30 seconds), which can impact application performance.
 
 This function:
-- **Prevents auto-shutdown during business hours**: Keeps the database active when it's needed
-- **Allows shutdown outside business hours**: Saves costs by not keeping the database warm 24/7
-- **Minimal overhead**: Simple INSERT operation every 5 minutes during work hours
+- **Prevents auto-shutdown during business hours**: Keeps databases and application layers active when they're needed
+- **Allows shutdown outside business hours**: Saves costs by not keeping resources warm 24/7
+- **Minimal overhead**: Simple INSERT operation and HTTP GET request every 5 minutes during work hours
 - **Cost-optimized**: Only runs when necessary (business hours only)
 
 ## How It Works
@@ -36,9 +36,13 @@ The function only performs the keep-alive operation during configured business h
 
 If the current time is outside the work window, the function logs a skip message and returns without connecting to the database.
 
-### Database Operation
+### Database and Application Operations
 
-When within the work window, the function:
+When within the work window, the function performs keep-alive operations for:
+
+#### Database Keep-Alive
+
+For each configured database:
 
 1. Retrieves the database connection string from environment variables
 2. Opens a connection to the Azure SQL Database
@@ -53,12 +57,26 @@ When within the work window, the function:
 - **Prevents auto-shutdown**: The write activity keeps the database from being considered "idle"
 - **Minimal impact**: Uses an existing `SysLog` table, creating minimal overhead
 
+#### Application Heartbeat
+
+1. Retrieves the heartbeat URL from environment variables (default: `https://iris.intralogichealth.com/api/heartbeat`)
+2. Makes an HTTP GET request to the heartbeat endpoint
+3. Logs the operation result
+
+**Note**: The heartbeat call serves to:
+- **Prevent app layer cold starts**: Keeps the application warm during business hours
+- **Minimal overhead**: Simple HTTP GET request with no payload
+
+All operations (databases and heartbeat) are executed in parallel for efficiency.
+
 
 ### Error Handling
 
-- Connection failures are caught and logged as errors
+- Database connection failures are caught and logged as errors
+- HTTP request failures (heartbeat) are caught and logged as errors
 - Missing connection strings are logged as warnings
 - All exceptions are handled gracefully to prevent function crashes
+- If one operation fails, other operations (other databases, heartbeat) continue to execute
 
 ## Configuration
 
@@ -71,6 +89,7 @@ The function uses the following environment variables (all have defaults):
 | `KEEPALIVE_DATABASES` | `"Default"` | Comma-separated list of database names to keep alive (e.g., "Default,Secondary,Third") |
 | `ConnectionStrings:Default` or `SQLConn` | *(required for "Default")* | Primary SQL Server connection string |
 | `ConnectionStrings:{DatabaseName}` | *(required per database)* | Connection string for each database listed in `KEEPALIVE_DATABASES` |
+| `HEARTBEAT_URL` | `"https://iris.intralogichealth.com/api/heartbeat"` | Application heartbeat endpoint URL to keep app layer warm |
 | `TIME_ZONE` | `"Eastern Standard Time"` | Time zone identifier for work window calculations |
 | `WORK_DAYS` | `"Mon-Fri"` | Comma-separated or hyphenated day range (e.g., "Mon-Fri", "Mon,Wed,Fri", "Sat,Sun") |
 | `WORK_START` | `"07:00"` | Start time of work window (24-hour format, HH:mm) |
@@ -277,7 +296,7 @@ The project includes a GitHub Actions workflow (`.github/workflows/master_keepal
 - `AZURE_RESOURCE_GROUP`: Resource group name (e.g., `pro-prod-rg`)
 - `AZURE_FUNCTION_APP_NAME`: Function App name (e.g., `KeepAlive`)
 
-See `SETUP_GITHUB_ACTIONS.md` for detailed setup instructions.
+See `GITHUB_ACTIONS_SETUP.md` for detailed setup instructions.
 
 ### Azure Function App Configuration
 
@@ -358,9 +377,16 @@ Check the `SysLog` table for periodic entries:
 
 ### Missing Log Entries
 
-1. **Verify table exists**: Ensure `SysLog` table exists in the target database
-2. **Check permissions**: Verify the SQL user has INSERT permissions
-3. **Review function logs**: Check for errors in Application Insights
+1. **Verify function is discovered:**
+   ```powershell
+   az functionapp function show --resource-group "YourResourceGroup" --name "KeepAlive" --function-name "DbKeepAlive"
+   ```
+   - If function is not found, the ZIP deployment structure is incorrect (files must be at root, not in subdirectory)
+
+2. **Verify table exists**: Ensure `SysLog` table exists in the target database
+3. **Check permissions**: Verify the SQL user has INSERT permissions
+4. **Review function logs**: Check for errors in Application Insights
+5. **Check configuration**: Verify `KEEPALIVE_DATABASES` and connection strings are set correctly
 
 ## Security Considerations
 

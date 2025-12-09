@@ -22,3 +22,4 @@ CREATE NONCLUSTERED INDEX IX_SysLog_LogDate ON SysLog(LogDate);
 
 -- Create index on LogUser if you'll query by user
 CREATE NONCLUSTERED INDEX IX_SysLog_LogUser ON SysLog(LogUser);
+

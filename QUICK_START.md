@@ -93,8 +93,8 @@ After deployment, configure in Azure Portal:
 
 2. **Check database inserts:**
    ```sql
-   SELECT TOP 10 * FROM SysLog 
-   WHERE LogUser = 'ChronJob' 
+   SELECT TOP 10 * FROM SysLog
+   WHERE LogUser = 'ChronJob'
    ORDER BY LogDate DESC
    ```
 
@@ -124,5 +124,4 @@ After deployment, configure in Azure Portal:
 
 - Review `README.md` for full documentation
 - See `DEPLOYMENT.md` for deployment options
-- Check `SETUP_GITHUB_ACTIONS.md` for CI/CD setup details
-
+- Check `GITHUB_ACTIONS_SETUP.md` for CI/CD setup details

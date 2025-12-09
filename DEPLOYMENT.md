@@ -90,8 +90,10 @@ The project includes a GitHub Actions workflow that automatically deploys on pus
 
 The workflow will:
 - Build the project
-- Create a ZIP package
+- Create a ZIP package (with files at root, not in subdirectory)
 - Deploy to Azure Function App using Azure CLI
+
+**Note:** The ZIP structure is critical - files must be at the root of the ZIP, not in a `keepalive/` subdirectory. The workflow handles this correctly.
 
 #### Manual Workflow Trigger
 
@@ -100,7 +102,7 @@ You can also trigger the workflow manually:
 - Select "Deploy Echo KeepAlive Function App"
 - Click "Run workflow" → "Run workflow"
 
-**For detailed setup instructions, see `SETUP_GITHUB_ACTIONS.md`**
+**For detailed setup instructions, see `GITHUB_ACTIONS_SETUP.md`**
 
 ### Method 3: Azure Portal (Manual Upload)
 
@@ -109,10 +111,14 @@ You can also trigger the workflow manually:
    dotnet publish --configuration Release --output ./publish/keepalive
    ```
 
-2. **Create ZIP:**
+2. **Create ZIP (files must be at root, not in subdirectory):**
    ```powershell
-   Compress-Archive -Path "./publish/keepalive/*" -DestinationPath "./publish/keepalive.zip" -Force
+   cd publish/keepalive
+   Compress-Archive -Path * -DestinationPath ../keepalive.zip -Force
+   cd ../..
    ```
+
+   **Important:** Azure Functions requires all files to be at the root of the ZIP, not in a subdirectory.
 
 3. **Deploy via Azure Portal:**
    - Function App → Deployment Center
@@ -207,17 +213,30 @@ The deployment script includes automatic verification. You can also manually ver
    az functionapp show --resource-group "YourResourceGroup" --name "KeepAlive"
    ```
 
+4. **Verify ZIP structure:**
+   - Azure Functions requires files at the root of the ZIP, not in a subdirectory
+   - If function is not discovered after deployment, the ZIP structure is likely incorrect
+   - For manual deployment: `cd publish/keepalive` then `Compress-Archive -Path * -DestinationPath ../keepalive.zip`
+   - The PowerShell deployment script (`deploy-keepalive.ps1`) handles this correctly
+
 ### Function Not Executing
 
-1. **Check configuration:**
+1. **Verify function is discovered:**
+   ```powershell
+   az functionapp function show --resource-group "YourResourceGroup" --name "KeepAlive" --function-name "DbKeepAlive"
+   ```
+   - If function is not found, check ZIP deployment structure (files must be at root, not in subdirectory)
+   - See "Deployment Fails" section below
+
+2. **Check configuration:**
    - Verify connection strings are set correctly
    - Check `KEEPALIVE_DATABASES` setting
 
-2. **Check work window:**
+3. **Check work window:**
    - Function only runs during business hours (Mon-Fri, 7am-7pm by default)
    - Adjust `WORK_START` and `WORK_END` if needed
 
-3. **Check logs:**
+4. **Check logs:**
    - Function App → Functions → `DbKeepAlive` → Monitor
    - Look for errors or warnings
 

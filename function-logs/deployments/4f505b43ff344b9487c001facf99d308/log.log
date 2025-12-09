@@ -1,0 +1,6 @@
+2025-08-14T13:25:00.7445896Z,Updating submodules.,09c382b1-fe43-4da8-80db-fa648994b192,0
+2025-08-14T13:25:00.9789738Z,Preparing deployment for commit id '4f505b43ff'.,323ca667-b253-4c58-a947-61456b32e9b1,0
+2025-08-14T13:25:01.6664753Z,Skipping build. Project type: Run-From-Zip,f8ef7397-d136-4051-98bc-f76851500ecc,0
+2025-08-14T13:25:01.8696059Z,Skipping post build. Project type: Run-From-Zip,ffbf777e-5e5e-4a68-a86c-5b108b9dedb3,0
+2025-08-14T13:25:02.1196165Z,Triggering recycle (preview mode disabled).,b60c49be-dc31-4519-a444-a2f2aeb4b8a2,0
+2025-08-14T13:25:02.3852496Z,Deployment successful.,23a93710-69b1-4f3a-90bd-18a40dfb65e0,0

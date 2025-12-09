@@ -1,0 +1,35 @@
+<step title="BackgroundTrace" date="2025-08-14T13:17:13.594" instance="24b1f2" url="/api/zipdeploy" method="POST" >
+  <step title="Updating shutdown sentinel last write time" date="2025-08-14T13:17:13.626" SemaphoreCount="7" /><!-- duration: 31ms -->
+  <step title="LockFile &apos;C:\home\site\locks\deployments.lock&apos; acquired" date="2025-08-14T13:17:13.672" /><!-- duration: 16ms -->
+  <step title="Creating temporary deployment" date="2025-08-14T13:17:13.704" /><!-- duration: 125ms -->
+  <step title="Performing fetch based deployment" date="2025-08-14T13:17:13.844" >
+    <step title="Fetching changes." date="2025-08-14T13:17:14.094" /><!-- duration: 31ms -->
+    <step title="Starting LocalZipHandler" date="2025-08-14T13:17:14.141" /><!-- duration: 16ms -->
+    <step title="Starting ExtractTriggers" date="2025-08-14T13:17:14.188" /><!-- duration: 16ms -->
+    <step title="Before sending BuildRequestReceived status to /api/updatedeploystatus" date="2025-08-14T13:17:14.266" /><!-- duration: 16ms -->
+    <step title="DeploymentManager.Deploy(id:7f51835f15eb449d9ffe3a498861948b)" date="2025-08-14T13:17:14.297" >
+      <step title="Collecting changeset information" date="2025-08-14T13:17:14.344" /><!-- duration: 141ms -->
+      <step title="Updating submodules" date="2025-08-14T13:17:14.501" >
+        <step title="Updating submodules." date="2025-08-14T13:17:14.704" /><!-- duration: 16ms -->
+      </step><!-- duration: 250ms -->
+      <step title="Preparing deployment for commit id &apos;7f51835f15&apos;." date="2025-08-14T13:17:14.922" /><!-- duration: 16ms -->
+      <step title="Determining deployment builder" date="2025-08-14T13:17:15.126" >
+        <step title="Builder is RunFromZipSiteBuilder" date="2025-08-14T13:17:15.141" /><!-- duration: 16ms -->
+      </step><!-- duration: 62ms -->
+      <step title="Copying SSH keys" date="2025-08-14T13:17:15.251" /><!-- duration: 31ms -->
+      <step title="Building" date="2025-08-14T13:17:15.297" >
+        <step title="Skipping build. Project type: Run-From-Zip" date="2025-08-14T13:17:15.485" /><!-- duration: 16ms -->
+        <step title="Skipping post build. Project type: Run-From-Zip" date="2025-08-14T13:17:15.688" /><!-- duration: 16ms -->
+        <step title="Triggering recycle (preview mode disabled)." date="2025-08-14T13:17:15.907" /><!-- duration: 16ms -->
+        <step title="Ignoring FS watcher based recycle request as this is a classic Windows app." date="2025-08-14T13:17:15.938" /><!-- duration: 16ms -->
+        <step title="Deployment successful. DEPLOYMENTINFO: deploymentPath = Functions App ZipDeploy. Run from package., deployer = az_cli_functions, os = windows, sku = Dynamic, language = dotnet-isolated, siteName = KeepAlive, slotName = Production, siteHostName = keepalive-erdcbvg3d4e9apff.westus2-01.azurewebsites.net, deploymentStatus = Success" date="2025-08-14T13:17:16.188" /><!-- duration: 21ms -->
+      </step><!-- duration: 1360ms -->
+    </step><!-- duration: 2391ms -->
+    <step title="Cleaning up temp files" date="2025-08-14T13:17:16.704" /><!-- duration: 16ms -->
+    <step title="Updating C:\home\data\SitePackages\packagename.txt with deployment 20250814131712.zip" date="2025-08-14T13:17:16.751" /><!-- duration: 2562ms -->
+    <step title="Begin HttpPost https://keepalive-erdcbvg3d4e9apff.scm.westus2-01.azurewebsites.net/operations/settriggers, x-ms-request-id: f243886d-7910-11f0-b039-94b86d6f3abe" date="2025-08-14T13:17:19.360" /><!-- duration: 47ms -->
+    <step title="End HttpPost, status: OK" date="2025-08-14T13:17:19.578" /><!-- duration: 16ms -->
+    <step title="Scheduling background sync triggers after delay" date="2025-08-14T13:17:19.625" /><!-- duration: 16ms -->
+  </step><!-- duration: 6312ms -->
+  <step title="LockFile &apos;C:\home\site\locks\deployments.lock&apos; released" date="2025-08-14T13:17:20.172" /><!-- duration: 31ms -->
+</step><!-- duration: 6640ms -->

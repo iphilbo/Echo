@@ -1,0 +1,116 @@
+2025-12-08T13:21:57.714 [Information] Host Status: {
+  "id": "keepalive",
+  "state": "Running",
+  "version": "4.1045.200.25555",
+  "versionDetails": "4.1045.200+ef15b0c233fa26e3039e172fff93f12f11609091",
+  "platformVersion": "106.0.7.100",
+  "instanceId": "f2f5f99a946e76974bceeb56e2d0915beb445953b91ba82d4be5884b6ac51e61",
+  "computerName": "172-24-0-69",
+  "processUptime": 800548,
+  "functionAppContentEditingState": "Unknown"
+}
+2025-12-08T13:25:00.007 [Information] Executing 'Functions.DbKeepAlive' (Reason='Timer fired at 2025-12-08T13:25:00.0048967+00:00', Id=cf2cdc3c-2aba-4614-a033-73bcdfe305f6)
+2025-12-08T13:25:00.007 [Information] Trigger Details: ScheduleStatus: {"Last":"2025-12-08T13:20:00.0004919+00:00","Next":"2025-12-08T13:25:00+00:00","LastUpdated":"2025-12-08T13:20:00.0004919+00:00"}
+2025-12-08T13:25:00.031 [Information] DB keepalive inserted log row. RowsAffected=1 at 12/08/2025 13:25:00
+2025-12-08T13:25:00.031 [Information] Executed 'Functions.DbKeepAlive' (Succeeded, Id=cf2cdc3c-2aba-4614-a033-73bcdfe305f6, Duration=26ms)
+2025-12-08T13:25:01.649 [Information] Host Status: {
+  "id": "keepalive",
+  "state": "Running",
+  "version": "4.1045.200.25555",
+  "versionDetails": "4.1045.200+ef15b0c233fa26e3039e172fff93f12f11609091",
+  "platformVersion": "106.0.7.100",
+  "instanceId": "f2f5f99a946e76974bceeb56e2d0915beb445953b91ba82d4be5884b6ac51e61",
+  "computerName": "172-24-0-69",
+  "processUptime": 984486,
+  "functionAppContentEditingState": "Unknown"
+}
+2025-12-08T13:30:00.004 [Information] Executing 'Functions.DbKeepAlive' (Reason='Timer fired at 2025-12-08T13:30:00.0022196+00:00', Id=9f98a05a-4883-4dd1-ad59-7d81066b77ff)
+2025-12-08T13:30:00.004 [Information] Trigger Details: ScheduleStatus: {"Last":"2025-12-08T13:25:00.0047229+00:00","Next":"2025-12-08T13:30:00+00:00","LastUpdated":"2025-12-08T13:25:00.0047229+00:00"}
+2025-12-08T13:30:00.071 [Information] DB keepalive inserted log row. RowsAffected=1 at 12/08/2025 13:30:00
+2025-12-08T13:30:00.072 [Information] Executed 'Functions.DbKeepAlive' (Succeeded, Id=9f98a05a-4883-4dd1-ad59-7d81066b77ff, Duration=70ms)
+2025-12-08T13:34:59.990 [Information] Executing 'Functions.DbKeepAlive' (Reason='Timer fired at 2025-12-08T13:34:59.9896647+00:00', Id=054d55eb-44c7-4998-b406-e928f7c44f0b)
+2025-12-08T13:34:59.990 [Information] Trigger Details: ScheduleStatus: {"Last":"2025-12-08T13:30:00.0020342+00:00","Next":"2025-12-08T13:35:00+00:00","LastUpdated":"2025-12-08T13:30:00.0020342+00:00"}
+2025-12-08T13:35:00.020 [Information] DB keepalive inserted log row. RowsAffected=1 at 12/08/2025 13:35:00
+2025-12-08T13:35:00.020 [Information] Executed 'Functions.DbKeepAlive' (Succeeded, Id=054d55eb-44c7-4998-b406-e928f7c44f0b, Duration=31ms)
+2025-12-08T13:40:00.004 [Information] Executing 'Functions.DbKeepAlive' (Reason='Timer fired at 2025-12-08T13:40:00.0030154+00:00', Id=13eee2d7-0c66-4c50-a89f-77ec86d7d9ca)
+2025-12-08T13:40:00.004 [Information] Trigger Details: ScheduleStatus: {"Last":"2025-12-08T13:35:00+00:00","Next":"2025-12-08T13:40:00+00:00","LastUpdated":"2025-12-08T13:35:00+00:00"}
+2025-12-08T13:40:00.014 [Information] DB keepalive inserted log row. RowsAffected=1 at 12/08/2025 13:40:00
+2025-12-08T13:40:00.014 [Information] Executed 'Functions.DbKeepAlive' (Succeeded, Id=13eee2d7-0c66-4c50-a89f-77ec86d7d9ca, Duration=11ms)
+2025-12-08T13:40:52.309 [Information] Host lock lease acquired by instance ID 'f2f5f99a946e76974bceeb56e2d0915b'.
+2025-12-08T13:41:17.530 [Information] HttpOptions
+{
+  "DynamicThrottlesEnabled": true,
+  "EnableChunkedRequestBinding": false,
+  "MaxConcurrentRequests": 100,
+  "MaxOutstandingRequests": 200,
+  "RoutePrefix": ""
+}
+2025-12-08T13:41:17.531 [Information] ConcurrencyOptions
+{
+  "DynamicConcurrencyEnabled": false,
+  "MaximumFunctionConcurrency": 500,
+  "CPUThreshold": 0.8,
+  "SnapshotPersistenceEnabled": true
+}
+2025-12-08T13:45:00.021 [Information] Executing 'Functions.DbKeepAlive' (Reason='Timer fired at 2025-12-08T13:45:00.0012711+00:00', Id=a7d8e7bb-24ed-4960-84b6-330cc9e9ca52)
+2025-12-08T13:45:00.026 [Information] Trigger Details: ScheduleStatus: {"Last":"2025-12-08T13:40:00.0028265+00:00","Next":"2025-12-08T13:45:00+00:00","LastUpdated":"2025-12-08T13:40:00.0028265+00:00"}
+2025-12-08T13:45:00.349 [Information] DB keepalive inserted log row. RowsAffected=1 at 12/08/2025 13:45:00
+2025-12-08T13:45:00.370 [Information] Executed 'Functions.DbKeepAlive' (Succeeded, Id=a7d8e7bb-24ed-4960-84b6-330cc9e9ca52, Duration=366ms)
+2025-12-08T13:50:00.001 [Information] Executing 'Functions.DbKeepAlive' (Reason='Timer fired at 2025-12-08T13:49:59.9992923+00:00', Id=09265cb3-21a5-442c-86a6-72395e119f94)
+2025-12-08T13:50:00.002 [Information] Trigger Details: ScheduleStatus: {"Last":"2025-12-08T13:45:00+00:00","Next":"2025-12-08T13:50:00+00:00","LastUpdated":"2025-12-08T13:45:00+00:00"}
+2025-12-08T13:50:00.082 [Information] DB keepalive inserted log row. RowsAffected=1 at 12/08/2025 13:50:00
+2025-12-08T13:50:00.083 [Information] Executed 'Functions.DbKeepAlive' (Succeeded, Id=09265cb3-21a5-442c-86a6-72395e119f94, Duration=84ms)
+2025-12-08T13:55:00.004 [Information] Executing 'Functions.DbKeepAlive' (Reason='Timer fired at 2025-12-08T13:55:00.0040380+00:00', Id=a261c6bc-e875-4495-b571-030fd01380ea)
+2025-12-08T13:55:00.004 [Information] Trigger Details: ScheduleStatus: {"Last":"2025-12-08T13:50:00+00:00","Next":"2025-12-08T13:55:00+00:00","LastUpdated":"2025-12-08T13:50:00+00:00"}
+2025-12-08T13:55:00.051 [Information] DB keepalive inserted log row. RowsAffected=1 at 12/08/2025 13:55:00
+2025-12-08T13:55:00.052 [Information] Executed 'Functions.DbKeepAlive' (Succeeded, Id=a261c6bc-e875-4495-b571-030fd01380ea, Duration=48ms)
+2025-12-08T14:10:35.657 [Information] Host Status: {
+  "id": "keepalive",
+  "state": "Running",
+  "version": "4.1045.200.25555",
+  "versionDetails": "4.1045.200+ef15b0c233fa26e3039e172fff93f12f11609091",
+  "platformVersion": "106.0.7.100",
+  "instanceId": "f2f5f99a946e76974bceeb56e2d0915beb445953b91ba82d4be5884b6ac51e61",
+  "computerName": "172-24-0-69",
+  "processUptime": 538088,
+  "functionAppContentEditingState": "Unknown"
+}
+2025-12-08T14:14:00.081 [Information] Host Status: {
+  "id": "keepalive",
+  "state": "Running",
+  "version": "4.1045.200.25555",
+  "versionDetails": "4.1045.200+ef15b0c233fa26e3039e172fff93f12f11609091",
+  "platformVersion": "106.0.7.100",
+  "instanceId": "f2f5f99a946e76974bceeb56e2d0915beb445953b91ba82d4be5884b6ac51e61",
+  "computerName": "172-24-0-69",
+  "processUptime": 742514,
+  "functionAppContentEditingState": "Unknown"
+}
+2025-12-08T14:14:01.711 [Information] Host Status: {
+  "id": "keepalive",
+  "state": "Running",
+  "version": "4.1045.200.25555",
+  "versionDetails": "4.1045.200+ef15b0c233fa26e3039e172fff93f12f11609091",
+  "platformVersion": "106.0.7.100",
+  "instanceId": "f2f5f99a946e76974bceeb56e2d0915beb445953b91ba82d4be5884b6ac51e61",
+  "computerName": "172-24-0-69",
+  "processUptime": 744143,
+  "functionAppContentEditingState": "Unknown"
+}
+2025-12-08T14:20:45.141 [Information] Loading functions metadata
+2025-12-08T14:20:45.142 [Information] Reading functions metadata (Custom)
+2025-12-08T14:20:45.142 [Information] 0 functions found (Custom)
+2025-12-08T14:20:45.144 [Error] No functions were found. A valid host.json file wasn't found in the package root. However, one was located at: \keepalive\host.json. This state indicates that your deployment package was created incorrectly. For deployment package requirements, see https://aka.ms/deployment-zip-push.
+2025-12-08T14:20:45.144 [Information] 0 functions loaded
+2025-12-08T14:20:45.282 [Information] Loading functions metadata
+2025-12-08T14:20:45.282 [Information] Reading functions metadata (Custom)
+2025-12-08T14:20:45.282 [Information] 0 functions found (Custom)
+2025-12-08T14:20:45.283 [Error] No functions were found. A valid host.json file wasn't found in the package root. However, one was located at: \keepalive\host.json. This state indicates that your deployment package was created incorrectly. For deployment package requirements, see https://aka.ms/deployment-zip-push.
+2025-12-08T14:20:45.283 [Information] 0 functions loaded
+2025-12-08T14:20:45.283 [Information] Loading functions metadata
+2025-12-08T14:20:45.284 [Information] Reading functions metadata (Custom)
+2025-12-08T14:20:45.284 [Information] 0 functions found (Custom)
+2025-12-08T14:20:45.285 [Error] No functions were found. A valid host.json file wasn't found in the package root. However, one was located at: \keepalive\host.json. This state indicates that your deployment package was created incorrectly. For deployment package requirements, see https://aka.ms/deployment-zip-push.
+2025-12-08T14:20:45.285 [Information] 0 functions loaded
+2025-12-08T14:24:20.576 [Information] Stopping JobHost
+2025-12-08T14:24:20.581 [Information] Job host stopped
