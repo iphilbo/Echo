@@ -60,7 +60,7 @@ namespace Prometheus.KeepAlive
                 // Get list of heartbeat URLs to keep alive
                 // Format: comma-separated list (e.g., "https://app1.com/api/heartbeat,https://app2.com/api/heartbeat")
                 // Default includes both IRIS and Dev endpoints
-                var heartbeatUrlsConfig = Environment.GetEnvironmentVariable("HEARTBEAT_URL") 
+                var heartbeatUrlsConfig = Environment.GetEnvironmentVariable("HEARTBEAT_URL")
                     ?? "https://iris.intralogichealth.com/api/heartbeat,https://dev.intralogichealth.com/api/heartbeat";
                 var heartbeatUrls = heartbeatUrlsConfig.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
