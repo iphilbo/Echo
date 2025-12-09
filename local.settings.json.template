@@ -3,9 +3,6 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    "ConnectionStrings:Default": "YOUR_CONNECTION_STRING_HERE",
-    "ConnectionStrings:Secondary": "YOUR_SECOND_DATABASE_CONNECTION_STRING_HERE",
-    "KEEPALIVE_DATABASES": "Default,Secondary",
     "HEARTBEAT_URL": "https://iris.intralogichealth.com/api/heartbeat,https://dev.intralogichealth.com/api/heartbeat",
     "TIME_ZONE": "Eastern Standard Time",
     "WORK_DAYS": "Mon-Fri",

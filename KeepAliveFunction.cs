@@ -1,7 +1,5 @@
-using System.Data;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using Microsoft.Data.SqlClient;
 using System.Net.Http;
 
 namespace Prometheus.KeepAlive
@@ -17,18 +15,17 @@ namespace Prometheus.KeepAlive
         }
 
         /// <summary>
-        /// Timer-triggered function that keeps the Azure SQL Database warm during business hours.
-        /// Prevents auto-shutdown by performing periodic write operations.
-        /// Runs every 5 minutes, but only executes database operations during configured work window.
+        /// Timer-triggered function that keeps application heartbeat endpoints warm during business hours.
+        /// Prevents cold starts by making periodic HTTP requests to configured endpoints.
+        /// Runs every 5 minutes, but only executes during configured work window.
         /// </summary>
         /// <param name="timer">Timer trigger information</param>
-        [Function("DbKeepAlive")]
+        [Function("HeartbeatKeepAlive")]
         public async Task Run([TimerTrigger("0 */5 * * * *", RunOnStartup = true)] TimerInfo timer)
         {
             try
             {
-                // Only keep database warm during business hours to save costs
-                // Azure SQL Database can auto-shutdown after periods of inactivity
+                // Only keep applications warm during business hours to save costs
                 if (!IsWithinWorkWindow())
                 {
                     var tzName = Environment.GetEnvironmentVariable("TIME_ZONE") ?? "Eastern Standard Time";
@@ -43,101 +40,34 @@ namespace Prometheus.KeepAlive
                     return;
                 }
 
-                // Get list of databases to keep alive
-                // Format: comma-separated list (e.g., "Default,Secondary,Third")
-                // If not specified, defaults to "Default" for backward compatibility
-                var databasesConfig = Environment.GetEnvironmentVariable("KEEPALIVE_DATABASES") ?? "Default";
-                var databaseNames = databasesConfig.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-                if (databaseNames.Length == 0)
-                {
-                    _logger.LogWarning("No databases configured for keep-alive. Set KEEPALIVE_DATABASES environment variable.");
-                    return;
-                }
-
-                _logger.LogInformation("Processing keep-alive for {Count} database(s): {Databases}", databaseNames.Length, string.Join(", ", databaseNames));
-
                 // Get list of heartbeat URLs to keep alive
                 // Format: comma-separated list (e.g., "https://app1.com/api/heartbeat,https://app2.com/api/heartbeat")
                 // Default includes both IRIS and Dev endpoints
                 var heartbeatUrlsConfig = Environment.GetEnvironmentVariable("HEARTBEAT_URL")
                     ?? "https://iris.intralogichealth.com/api/heartbeat,https://dev.intralogichealth.com/api/heartbeat";
+                _logger.LogInformation("Heartbeat URLs config (raw): '{Config}'", heartbeatUrlsConfig);
                 var heartbeatUrls = heartbeatUrlsConfig.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
-                if (heartbeatUrls.Length > 0)
+                if (heartbeatUrls.Length == 0)
                 {
-                    _logger.LogInformation("Processing keep-alive for {Count} heartbeat endpoint(s): {Urls}", heartbeatUrls.Length, string.Join(", ", heartbeatUrls));
+                    _logger.LogWarning("No heartbeat URLs configured. Set HEARTBEAT_URL environment variable.");
+                    return;
                 }
 
-                // Process all databases and heartbeat endpoints (in parallel for efficiency)
-                var tasks = new List<Task>();
-                tasks.AddRange(databaseNames.Select(dbName => KeepDatabaseAliveAsync(dbName.Trim())));
-                tasks.AddRange(heartbeatUrls.Select(url => KeepHeartbeatAliveAsync(url.Trim())));
+                _logger.LogInformation("Processing keep-alive for {Count} heartbeat endpoint(s): {Urls}", heartbeatUrls.Length, string.Join(", ", heartbeatUrls));
+                // Log each URL individually for debugging
+                for (int i = 0; i < heartbeatUrls.Length; i++)
+                {
+                    _logger.LogInformation("Heartbeat URL [{Index}]: '{Url}' (length: {Length})", i, heartbeatUrls[i], heartbeatUrls[i].Length);
+                }
+
+                // Process all heartbeat endpoints (in parallel for efficiency)
+                var tasks = heartbeatUrls.Select(url => KeepHeartbeatAliveAsync(url.Trim()));
                 await Task.WhenAll(tasks);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Keep-alive process failed");
-            }
-        }
-
-        /// <summary>
-        /// Performs keep-alive operation on a single database.
-        /// </summary>
-        /// <param name="databaseName">Name of the database (used to look up connection string)</param>
-        private async Task KeepDatabaseAliveAsync(string databaseName)
-        {
-            try
-            {
-                // Look up connection string by database name
-                // Supports: ConnectionStrings:{DatabaseName} or ConnectionStrings:Default for "Default"
-                // Special case: IRIS uses IRISConn environment variable
-                string connStr;
-
-                if (databaseName.Equals("IRIS", StringComparison.OrdinalIgnoreCase))
-                {
-                    // IRIS uses IRISConn environment variable
-                    connStr = Environment.GetEnvironmentVariable("IRISConn") ?? string.Empty;
-                }
-                else if (databaseName.Equals("Default", StringComparison.OrdinalIgnoreCase))
-                {
-                    // Default database: try ConnectionStrings:Default, then SQLConn for backward compatibility
-                    connStr = Environment.GetEnvironmentVariable("ConnectionStrings:Default")
-                              ?? Environment.GetEnvironmentVariable("SQLConn")
-                              ?? string.Empty;
-                }
-                else
-                {
-                    // Other databases: use ConnectionStrings:{DatabaseName}
-                    var connStrKey = $"ConnectionStrings:{databaseName}";
-                    connStr = Environment.GetEnvironmentVariable(connStrKey) ?? string.Empty;
-                }
-
-                if (string.IsNullOrWhiteSpace(connStr))
-                {
-                    var expectedVar = databaseName.Equals("IRIS", StringComparison.OrdinalIgnoreCase)
-                        ? "IRISConn"
-                        : databaseName.Equals("Default", StringComparison.OrdinalIgnoreCase)
-                            ? "ConnectionStrings:Default or SQLConn"
-                            : $"ConnectionStrings:{databaseName}";
-                    _logger.LogWarning("No connection string found for database '{DatabaseName}' (expected: {ExpectedVariable})", databaseName, expectedVar);
-                    return;
-                }
-
-                // Perform a simple write operation to keep the database active
-                // This prevents Azure SQL Database from auto-shutting down during business hours
-                using var conn = new SqlConnection(connStr);
-                using var cmd = new SqlCommand("INSERT INTO SysLog (LogUser, LogData) VALUES (@u, @d)", conn);
-                cmd.Parameters.AddWithValue("@u", "ChronJob");
-                cmd.Parameters.AddWithValue("@d", "Keeping Alive");
-                await conn.OpenAsync();
-                var rows = await cmd.ExecuteNonQueryAsync();
-                _logger.LogInformation("Database '{DatabaseName}' keep-alive successful. RowsAffected={Rows} at {Time}", databaseName, rows, DateTime.UtcNow);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Keep-alive failed for database '{DatabaseName}'", databaseName);
-                // Don't throw - continue processing other databases even if one fails
             }
         }
 
@@ -156,21 +86,49 @@ namespace Prometheus.KeepAlive
                     return;
                 }
 
+                // Trim and validate URL
+                heartbeatUrl = heartbeatUrl.Trim();
+                _logger.LogInformation("Attempting heartbeat call to: '{Url}'", heartbeatUrl);
+
                 // Make HTTP GET request to heartbeat endpoint
                 var response = await _httpClient.GetAsync(heartbeatUrl);
-                response.EnsureSuccessStatusCode();
-                _logger.LogInformation("Heartbeat endpoint '{Url}' keep-alive successful. StatusCode={StatusCode} at {Time}", heartbeatUrl, response.StatusCode, DateTime.UtcNow);
+
+                // For keep-alive purposes, any response (including 401) indicates the server is alive
+                // 401 Unauthorized means the server is responding but rejecting the request
+                // This is acceptable for keep-alive - the goal is to prevent cold starts
+                if (response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation("Heartbeat endpoint '{Url}' keep-alive successful. StatusCode={StatusCode} at {Time}", heartbeatUrl, response.StatusCode, DateTime.UtcNow);
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    // 401 means server is alive but requires authentication - still counts as "warm"
+                    _logger.LogWarning("Heartbeat endpoint '{Url}' returned 401 Unauthorized. Server is responding but may require authentication. StatusCode={StatusCode} at {Time}", heartbeatUrl, response.StatusCode, DateTime.UtcNow);
+                }
+                else
+                {
+                    // Other non-success status codes - log as error
+                    response.EnsureSuccessStatusCode(); // This will throw for other error codes
+                }
+            }
+            catch (HttpRequestException httpEx)
+            {
+                _logger.LogError(httpEx, "HTTP request failed for heartbeat endpoint '{Url}'. Message: {Message}", heartbeatUrl, httpEx.Message);
+            }
+            catch (TaskCanceledException timeoutEx)
+            {
+                _logger.LogError(timeoutEx, "Timeout calling heartbeat endpoint '{Url}'. Message: {Message}", heartbeatUrl, timeoutEx.Message);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Heartbeat endpoint keep-alive failed for '{Url}'", heartbeatUrl);
+                _logger.LogError(ex, "Heartbeat endpoint keep-alive failed for '{Url}'. Exception: {ExceptionType}, Message: {Message}", heartbeatUrl, ex.GetType().Name, ex.Message);
                 // Don't throw - continue processing other keep-alive operations even if heartbeat fails
             }
         }
 
         /// <summary>
         /// Determines if the current time is within the configured business hours window.
-        /// Only keeps database warm during business hours to optimize costs.
+        /// Only keeps applications warm during business hours to optimize costs.
         /// </summary>
         /// <returns>True if within work window, false otherwise</returns>
         private static bool IsWithinWorkWindow()
