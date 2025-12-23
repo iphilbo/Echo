@@ -7,6 +7,7 @@ Get the Echo KeepAlive Function App up and running quickly.
 - Azure subscription
 - Azure Function App created (Runtime: .NET 8.0 Isolated)
 - Azure CLI installed and logged in
+- .NET 8.0 SDK installed
 - GitHub repository: https://github.com/iphilbo/Echo
 
 ## Quick Setup Steps
@@ -21,10 +22,14 @@ Get the Echo KeepAlive Function App up and running quickly.
 
 2. **Configure local settings:**
    - Copy `local.settings.json.template` to `local.settings.json`
-   - Add your connection strings:
-     - `ConnectionStrings:Default` - Prometheus database
-     - `IRISConn` - IRIS database
-   - Set `KEEPALIVE_DATABASES`: `Default,IRIS`
+   - Configure heartbeat endpoints (default includes IRIS and Dev):
+     - `HEARTBEAT_URL`: Comma-separated list of URLs
+     - Example: `"https://iris.intralogichealth.com/api/heartbeat,https://dev.intralogichealth.com/api/heartbeat"`
+   - Optional: Adjust work window settings:
+     - `TIME_ZONE`: `"Eastern Standard Time"`
+     - `WORK_DAYS`: `"Mon-Fri"`
+     - `WORK_START`: `"07:00"`
+     - `WORK_END`: `"19:00"`
 
 3. **Test locally:**
    ```powershell
@@ -32,29 +37,7 @@ Get the Echo KeepAlive Function App up and running quickly.
    func start  # If you have Azure Functions Core Tools
    ```
 
-### 2. Database Setup
-
-Create the `SysLog` table in both databases:
-
-**Prometheus Database:**
-```sql
-CREATE TABLE SysLog (
-    LogUser NVARCHAR(255),
-    LogData NVARCHAR(MAX)
-);
-```
-
-**IRIS Database:**
-```sql
-CREATE TABLE SysLog (
-    LogUser NVARCHAR(255),
-    LogData NVARCHAR(MAX)
-);
-```
-
-See `create_syslog_table.sql` or `create_syslog_table_minimal.sql` for full scripts.
-
-### 3. GitHub Actions Setup (Automated Deployment)
+### 2. GitHub Actions Setup (Automated Deployment)
 
 1. **Create service principal:**
    ```powershell
@@ -71,49 +54,46 @@ See `create_syslog_table.sql` or `create_syslog_table_minimal.sql` for full scri
    - Push to `main` branch, or
    - Go to Actions tab → Run workflow manually
 
-### 4. Azure Configuration
+### 3. Azure Configuration
 
 After deployment, configure in Azure Portal:
 
-**Connection Strings:**
-- `ConnectionStrings:Default` → Prometheus connection string
-- `IRISConn` → IRIS connection string
-
 **Application Settings:**
-- `KEEPALIVE_DATABASES` = `Default,IRIS`
-- `TIME_ZONE` = `Eastern Standard Time` (optional)
-- `WORK_DAYS` = `Mon-Fri` (optional)
-- `WORK_START` = `07:00` (optional)
-- `WORK_END` = `19:00` (optional)
+- `HEARTBEAT_URL` = `https://iris.intralogichealth.com/api/heartbeat,https://dev.intralogichealth.com/api/heartbeat`
+- `TIME_ZONE` = `Eastern Standard Time` (optional, default shown)
+- `WORK_DAYS` = `Mon-Fri` (optional, default shown)
+- `WORK_START` = `07:00` (optional, default shown)
+- `WORK_END` = `19:00` (optional, default shown)
 
 ## Verify It's Working
 
 1. **Check Function App logs:**
-   - Azure Portal → Function App → Functions → `DbKeepAlive` → Monitor
+   - Azure Portal → Function App → Functions → `HeartbeatKeepAlive` → Monitor
+   - Look for successful heartbeat calls during business hours
 
-2. **Check database inserts:**
-   ```sql
-   SELECT TOP 10 * FROM SysLog
-   WHERE LogUser = 'ChronJob'
-   ORDER BY LogDate DESC
-   ```
+2. **Expected behavior:**
+   - Function runs every 5 minutes during business hours (Mon-Fri, 7am-7pm EST)
+   - Makes HTTP GET requests to configured heartbeat endpoints
+   - Logs show successful heartbeat calls
+   - Skips execution outside business hours
 
-3. **Expected behavior:**
-   - Function runs every 5 minutes during business hours
-   - Inserts "Keeping Alive" entries into both databases
-   - Logs show successful executions
+3. **Check heartbeat endpoints:**
+   - Manually test endpoints to verify they're responding
+   - Review function logs for any HTTP errors
 
 ## Troubleshooting
 
 **Function not running?**
 - Check work window (Mon-Fri, 7am-7pm by default)
-- Verify connection strings are configured
+- Verify `HEARTBEAT_URL` is configured correctly
 - Check Function App is running
+- Verify current time is within work window
 
-**Database connection errors?**
-- Verify firewall rules allow Function App access
-- Check connection string credentials
-- Ensure `SysLog` table exists
+**Heartbeat endpoints failing?**
+- Verify URLs are correct and accessible
+- Check network connectivity from Function App
+- Review function logs for detailed error messages
+- Note: 401 Unauthorized is treated as a warning (server is still warm)
 
 **Deployment issues?**
 - See `DEPLOYMENT.md` for detailed deployment guide
@@ -122,6 +102,7 @@ After deployment, configure in Azure Portal:
 
 ## Next Steps
 
+- Review `SETUP.md` for complete setup instructions
 - Review `README.md` for full documentation
 - See `DEPLOYMENT.md` for deployment options
 - Check `GITHUB_ACTIONS_SETUP.md` for CI/CD setup details

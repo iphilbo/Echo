@@ -207,47 +207,36 @@ CREATE TABLE SysLog (
 
 ## Development
 
+> **📖 For complete setup instructions on a new machine, see [SETUP.md](SETUP.md)**
+
 ### Prerequisites
 
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [Azure Functions Core Tools](https://docs.microsoft.com/azure/azure-functions/functions-run-local)
+- [Azure Functions Core Tools](https://docs.microsoft.com/azure/azure-functions/functions-run-local) (optional, for local testing)
 - [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli) (for deployment)
-- SQL Server database with `SysLog` table
 
 ### Local Development
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/iphilbo/Echo.git
    cd Echo
    ```
 
 2. **Configure local settings**
 
-   Create or update `local.settings.json`:
+   Copy `local.settings.json.template` to `local.settings.json` and configure:
    ```json
    {
      "IsEncrypted": false,
      "Values": {
        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
        "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-       "ConnectionStrings:Default": "Server=...;Database=...;...",
-       "KEEPALIVE_DATABASES": "Default",
+       "HEARTBEAT_URL": "https://iris.intralogichealth.com/api/heartbeat,https://dev.intralogichealth.com/api/heartbeat",
        "TIME_ZONE": "Eastern Standard Time",
        "WORK_DAYS": "Mon-Fri",
        "WORK_START": "07:00",
        "WORK_END": "19:00"
-     }
-   }
-   ```
-
-   **For multiple databases:**
-   ```json
-   {
-     "Values": {
-       "KEEPALIVE_DATABASES": "Default,Secondary",
-       "ConnectionStrings:Default": "Server=...;Database=corp-db;...",
-       "ConnectionStrings:Secondary": "Server=...;Database=secondary-db;..."
      }
    }
    ```
@@ -270,7 +259,8 @@ dotnet build
 The function can be tested by:
 1. Running locally and observing logs
 2. Adjusting `WORK_START` and `WORK_END` to include current time
-3. Verifying database inserts in the `SysLog` table
+3. Verifying heartbeat endpoint calls in the logs
+4. Manually testing heartbeat endpoints to ensure they're accessible
 
 ## Deployment
 
